@@ -1,25 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Header from "./components/Header";
+import Form from "./components/Form";
+import { Container, Grid } from "@mui/material";
+import Table from "./components/Table";
+import { Visitors } from "./types/visitor";
+import type {} from "@mui/x-data-grid/themeAugmentation";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
+  const [localStorageVisitors, setLocalStorageVisitors] = useLocalStorage(
+    "visitors",
+    []
+  );
+  const [visitors, setVisitors] = useState<Visitors>(localStorageVisitors);
+
+  useEffect(() => {
+    setLocalStorageVisitors(visitors);
+  }, [visitors]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <Grid container component="main">
+        <Grid xs={12} sm={12} md={5} lg={4} item={true}>
+          <Container>
+            <Form visitors={visitors} setVisitors={setVisitors} />
+          </Container>
+        </Grid>
+        <Grid xs={12} sm={false} md={7} lg={8} item={true}>
+          <Container maxWidth={false}>
+            <Table visitors={visitors} setVisitors={setVisitors} />
+          </Container>
+        </Grid>
+      </Grid>
+    </>
   );
 }
 
